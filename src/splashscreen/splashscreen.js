@@ -16,21 +16,21 @@ function Splashscreen({navigation}) {
     
     return (
         <SafeAreaView style={{width:'100%', height:'100%', backgroundColor:"white"}}>
-            <StatusBar hidden={true} />
+            <StatusBar hidden={false} backgroundColor='#ffffff' />
                 <View style={{width: widthWindow, height: heightWindow}}>
                     <View style={{width:'100%', height:"90%", position:'relative', flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
                         <View style={{width:200, height:200,alignItems:"center"}}>
                             <Image style={{width:100, height:100}} source={require("../../drawble/drawbleImg/Petal_Maps_Logo.png")}></Image>
-                            <Text style={{fontSize:25, fontWeight:"bold", color:"#FE4574", marginTop:10}}>Mavis Map</Text>
+                            <Text style={{fontSize:25, fontWeight:"bold", color:"#005C9D", marginTop:100}}>DEFIMAPS</Text>
                         </View>
                     </View>
                     <View style={{width:"100%", height:"10%", flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
                         <View style={{width:200, height:200,alignItems:"center",flexDirection:'column', justifyContent:"center",}}>
-                            <Text style={{color:"#00D268", }}>
+                            <Text style={{color:"#005C9D", }}>
                                 Design by
                             </Text>
-                            <Text style={{color:"#FE4574", }}>
-                                5T1N
+                            <Text style={{color:"#27B1FC", }}>
+                                CNTT Cao Đẳng Viễn Đông
                             </Text>
                         </View>
                     </View>

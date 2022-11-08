@@ -11,43 +11,35 @@ import {
     Image,
     StatusBar,
     Animated,
-    AppRegistry } from 'react-native';
+    AppRegistry,
+    BackHandler,
+    Platform } from 'react-native';
 import React, { Component } from 'react'
 import { useState, useEffect, useRef } from 'react';
 import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import { Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { GestureHandlerRootView, PinchGestureHandler, State, PanGestureHandler } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, PinchGestureHandler, State, PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import { check, PERMISSIONS, RESULTS, request, checkMultiple, requestMultiple, openSettings } from 'react-native-permissions'
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 
 const widthWindow = Dimensions.get('window').width;
 const heightWindow = Dimensions.get('window').height;
+const CARD_HEIGHT = 220;
+const CARD_WIDTH = widthWindow * 0.8;
+const SPACING_FOR_CARD_INSET = widthWindow * 0.1 - 10;
 
-//10.837287, 106.637145
-const LATITUDE_LEFT_TOP = 10.852102; 
-const LONGITUDE_LEFT_TOP = 106.627901; 
+// lat and long center building
 
-const LATITUDE_RIGHT_TOP = 10.852102;
-const LONGITUDE_RIGHT_TOP = 106.628256;
 
-const LATITUDE_LEFT_BOTTOM = 10.851352;//point
-const LONGITUDE_LEFT_BOTTOM = 106.627901;//point
+//10.851655221139566, 106.62816684009636
 
-const LATITUDE_RIGHT_BOTTOM = 10.851352;
-const LONGITUDE_RIGHT_BOTTOM = 106.628256;
-
-const LATITUDE_DISTANCE_LEFT = (LATITUDE_LEFT_TOP - LATITUDE_LEFT_BOTTOM)/heightWindow;
-const LONGITUDE_DISTANCE_BOTTOM = (LONGITUDE_RIGHT_BOTTOM - LONGITUDE_LEFT_BOTTOM);
-
-// Detail
-
-const LATITUDE_DISTANCE_RIGHT = LATITUDE_DISTANCE_LEFT;
-const LONGITUDE_DISTANCE_TOP = LONGITUDE_DISTANCE_BOTTOM ;
-
-// 10.851964668949051, 106.62819771457278
-
-const LAT = 10.851964668949051;
-const LONG = 106.62819771457278;
+const LAT = 10.851655221139566
+const LONG =  106.62816684009636;
 
 
 
@@ -57,35 +49,126 @@ const LONG = 106.62819771457278;
 
 function HomeActivity({navigation}){
 
+  const categories = [
+    { 
+      name: 'Thức ăn nhanh', 
+      icon: <MaterialCommunityIcons style={style.chipsIcon} name="food-fork-drink" size={18} />,
+    },
+    {
+      name: 'Nhà hàng',
+      icon: <Ionicons name="restaurant" style={style.chipsIcon} size={18} />,
+    },
+    
+    {
+      name: 'Khách sạn',
+      icon: <Fontisto name="hotel" style={style.chipsIcon} size={15} />,
+    },
+    {
+      name: 'Nhà riêng',
+      icon: <Fontisto name="home" style={style.chipsIcon} size={15} />,
+    },
+    
+  ]
+  const [getLawPermission, setLawPermission] = useState(false);
    
-      // console.log(scale);
-    const [positionTS, setPositionTS] = useState({
-      latitude: Math.round(((LAT.toFixed(6))- LATITUDE_LEFT_BOTTOM)/LATITUDE_DISTANCE_LEFT),
-      longitude: Math.round(((LONG.toFixed(6)) - LONGITUDE_LEFT_BOTTOM)/LONGITUDE_DISTANCE_BOTTOM),
-      latitudeDelta: 0.0421,
-      longitudeDelta: 0.0421,
-    })
+    const requestPermission = () => {
+      request(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION).then((response) => {
+        console.log(response)
+      })
+    }
 
-    const [position, setPosition] = useState({
-        latitude: 10,
-        longitude: 10,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
-      });
+    const checkPermission = () => {
+      check(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION)
+        .then((result) => {
+          switch (result) {
+            case RESULTS.DENIED:
+              BackHandler.exitApp();
+              console.log('The permission has not been requested / is denied but requestable');
+              
+              break;
+            case RESULTS.GRANTED:
+              console.log('The permission is granted');
+              setLawPermission(true)
+              break;
+            case RESULTS.BLOCKED:
+              BackHandler.exitApp();
+              console.log('The permission is denied and not requestable anymore');
+              
+              break;
+          }
+        })
+        .catch((error) => {
+          // …
+        });
+    }
+
+    const runningRequest = () =>{
+      if (getLawPermission == false) {
+        requestPermission();
+        checkPermission();
+      }
+    }
+
+    const [position, setPosition] = useState(null);
+
+    const PositionDF = () => {
+      Geolocation.getCurrentPosition((pos) => {
+        const crd = pos.coords;
+        setPosition({
+          latitude: crd.latitude ,
+          longitude: crd.longitude ,
+          latitudeDelta: 0.0421,
+          longitudeDelta: 0.0421,
+        });
+      }).catch((err) => {
+        console.log(err);
+      })
+
+    }
+
+    const [indexLocation, setIndexLocation] = useState(1);
+    const topMotion = useRef(new Animated.Value(-500)).current;
+
+    const topView = () => {
+      // Will change fadeAnim value to 1 in 5 seconds
+      Animated.timing(topMotion, {
+        toValue: 10,
+        duration: 500,
+        useNativeDriver: false
+      }).start();
+    };
+
+    const bottomView = () => {
+      // Will change fadeAnim value to 1 in 5 seconds
+      Animated.timing(topMotion, {
+        toValue: -500,
+        duration: 500,
+        useNativeDriver: false
+      }).start();
+    };
 
       useEffect(() => {
-        Geolocation.getCurrentPosition((pos) => {
-          const crd = pos.coords;
-          setPosition({
-            latitude: crd.latitude,
-            longitude: crd.longitude,
-            latitudeDelta: 0.0421,
-            longitudeDelta: 0.0421,
-          });
-        }).catch((err) => {
-          console.log(err);
-        });
-      }, [position]);
+        if (position == null) {
+          PositionDF();
+          Geolocation.stopObserving();
+        }
+        runningRequest();
+      });
+
+      const _map = React.useRef(null);
+      const _scrollView = React.useRef(null);
+    
+
+      const onMarkerPress = (mapEventData) => {
+        const markerID = mapEventData._targetInst.return.key;
+    
+        let x = (markerID * CARD_WIDTH) + (markerID * 20); 
+        if (Platform.OS === 'ios') {
+          x = x - SPACING_FOR_CARD_INSET;
+        }
+    
+        _scrollView.current.scrollTo({x: x, y: 0, animated: true});
+      }
 
 
       const scale = useRef(new Animated.Value(1)).current;
@@ -108,83 +191,239 @@ function HomeActivity({navigation}){
         }
       }
     return (
-        <SafeAreaView style={{width:'100%', height:'100%', padding:0}}>
-        <StatusBar
-            hidden={false}
-        />
-            <View style={{width: widthWindow, height: heightWindow, backgroundColor:"white"}}>
-              {/* TEST */}
-              <Text>
-                {
-                  positionTS.latitude+"||||"+positionTS.longitude
-                }
-              </Text>
-            {/* <MapView
-              style={{width:"100%", height:'90%'}}
-                initialRegion={
-                  position
-                }
-                showsUserLocation={true}
-                showsMyLocationButton = {true}
-                mapType="hybrid"
-                zoomTapEnabled= {true}
-                minZoomLevel={50}
-                maxZoomLevel={50}
-                followsUserLocation={false}
-                userLocationUpdateInterval = {500}>
-                <Marker
-                  style={{width:30, height:30}}
-                    coordinate={position}
-                    title={"Me"}
-                    description={"Check point"}
-                >
-                  <View style={{width:30 }}>
-                    <Image style={{width:30, height:30}} source={require("../../drawble/drawbleImg/locationicon.jpg")}/>
-                  </View>
-                </Marker>
-            </MapView>
-              <View style = {{width:"100%", height:"10%"}}>
-                  <Text style={{textAlign:"center"}}>{String(position["latitude"])+"|||"+String(position["longitude"])}</Text>
-              </View> */}
-              {/* Chỉnh map (chưa hoàng thiện) */}
-              {/* <GestureHandlerRootView>
-                  <PinchGestureHandler 
-                    onGestureEvent = {onZoomEventFunction}
-                    // onHandlerStateChange = {onZoomStateChangeFunction}
-                  >
-                    <Animated.Image 
-                      source={require("../../drawble/drawbleImg/map.png")} 
-                      style={{ width:widthWindow, 
-                        height:heightWindow, 
-                        transform:[
-                          {scale: scale}
-                        ]
+        <SafeAreaView style={style.main_project}>
+          <StatusBar
+            hidden={false} 
+            backgroundColor="#0D9648"
+          />
+            <View style={style.main_view}>
+             
+              <MapView
+                style={style.map_view}
+                  initialRegion={
+                    position
+                  }
+                  showsUserLocation={true}
+                  showsMyLocationButton = {true}
+                  mapType="standard"
+                  zoomTapEnabled= {true}
+                  minZoomLevel={0}
+                  maxZoomLevel={50}
+                  followsUserLocation={true}
+                  showsIndoors={true}
+                  userLocationUpdateInterval = {500}>
+                  <Marker
+                    style={style.marker_point}
+                      coordinate={{
+                        latitude: 10.85182111358613,
+                        longitude:  106.62807166628698
                       }}
-                      // resizeMode={'contain'}
+                      title={"Cao Đẳng Viễn Đông"}
+                      description={"Có việc làm đúng ngành"}
+                      onPress={() => {
+                        navigation.navigate("DetailMap")
+                      }}
+                  >
+                    <View style={style.marker_point}>
+                      <Image style={style.marker_point} source={require("../../drawble/drawbleImg/logoVido.png")}/>
+                    </View>
+                  </Marker>
+                   {/* {markers.map((marker, index) => {
+                    return (
+                      <Marker key={index} 
+                      coordinate={marker.coordinate} 
+                      title={marker.title}
+                      description={marker.description}
+                      onPress={() => {
+                        setIndexLocation(index),
+                        topView();
+                      }}
+                      >
+                          <View style={[style.markerWrap]}>
+                            <Image
+                              source={require('../../drawble/drawbleImg/locationicon.jpg')}
+                              style={[style.marker]}
+                              resizeMode="cover"
+                            />
+                          </View>
+                      </Marker>
+                    );
+                  })} */}
+              </MapView>
+
+              {/* search and scrollview search */}
+              <View style={style.searchBox}>
+                <Icon name="map-marked-alt" color={'#CB3837'} size={20} />
+                <TextInput 
+                  placeholder="Search here"
+                  placeholderTextColor="#000"
+                  autoCapitalize="none"
+                  style={{flex:1,padding:0, marginLeft: 10}}
+                />
+                <Ionicons name="search" size={20} color="#900" />
+              </View>
+              <ScrollView
+                 horizontal
+                 scrollEventThrottle={1}
+                 showsHorizontalScrollIndicator={false}
+                 height={50}
+                 style={style.chipsScroolView}
+                 contentInset={{ // iOS only
+                   top:0,
+                   left:0,
+                   bottom:0,
+                   right:20
+                 }}
+                 contentContainerStyle={{paddingRight:20}}
+              >
+                {categories.map((category, index) => (
+                  <TouchableOpacity key={index} style={style.chipsItem}>
+                    {category.icon}
+                    <Text>{category.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {/* View detail */}
+                {/* <Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
+                <Image 
+                      source={markers[indexLocation].image}
+                      style={style.cardImage}
+                      resizeMode="cover"
                     />
-                  </PinchGestureHandler>
-                </GestureHandlerRootView> */}
-               {/* <Text>
-                {
-                  LATITUDE_DISTANCE_LEFT/heightWindow + "|||"+ LONGITUDE_DISTANCE_LEFT/heightWindow
-
-                }
-               </Text> */}
-               {/* <Text>
-                {
-                  LATITUDE_DISTANCE_BOTTOM/widthWindow + "|||"+ LONGITUDE_DISTANCE_BOTTOM/widthWindow
-
-                }
-               </Text> */}
+                    <View style={style.textContent}>
+                      <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
+                      <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
+                      <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
+                    </View>
+                        <TouchableOpacity
+                          onPress={() => {
+                            bottomView();
+                          }}
+                          style={[style.signIn, {borderColor: '#FF6347', borderWidth: 1}]}
+                        >
+                          <Text style={[style.textSign, {color: '#FF6347'}]}>X</Text>
+                        </TouchableOpacity>
+                </Animated.View> */}
             </View>
    </SafeAreaView>
     )
 }
 
 const style = StyleSheet.create({
-  zoomImg: {
-    width:widthWindow, 
-    height:200
+  main_project: {
+    width:'100%',
+    height:'100%', 
+    padding:0
+  },
+  main_view: {
+    width: widthWindow, 
+    height: heightWindow, 
+    position:'relative'
+  },
+  map_view: {
+    width:"100%", 
+    height:'100%'
+  },
+  marker_point: {
+    width:25, 
+    height:25
+  },
+  searchBox: {
+    position:'absolute', 
+    top:10,
+    left:10,
+    flexDirection:"row",
+    backgroundColor: '#fff',
+    width: '80%',
+    alignSelf:'center',
+    borderRadius: 5,
+    padding: 8,
+    shadowColor: '#ccc',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  chipsScroolView: {
+    position:'absolute', 
+    top:80, 
+    paddingHorizontal:10
+  },
+  chipsIcon: {
+    marginRight: 5,
+  },
+  chipsItem: {
+    flexDirection:"row",
+    backgroundColor:'#fff', 
+    borderRadius:20,
+    padding:8,
+    paddingHorizontal:20, 
+    marginHorizontal:10,
+    height:35,
+    shadowColor: '#ccc',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  markerWrap: {
+    alignItems: "center",
+    justifyContent: "center",
+    width:50,
+    height:50,
+  },
+  marker: {
+    width: 30,
+    height: 30,
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: 5
+  },
+  card: {
+    width:"95%",
+    height:"40%",
+    backgroundColor:"white",
+    position:'absolute',
+    left:10,
+    
+  },
+  cardImage: {
+    flex: 3,
+    width: "100%",
+    height: "100%",
+    // alignSelf: "center",
+  },
+  textContent: {
+    flex: 2,
+    padding: 10,
+  },
+  cardtitle: {
+    fontSize: 12,
+    // marginTop: 5,
+    fontWeight: "bold",
+  },
+  cardDescription: {
+    fontSize: 12,
+    color: "#444",
+  },
+  
+  signIn: {
+      position:"absolute",
+      top:5,
+      right:5,
+      width: '10%',
+      padding:8,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 20,
+      backgroundColor:'white'
+      
+  },
+  textSign: {
+      fontSize: 14,
+      fontWeight: 'bold'
   }
 })
 
