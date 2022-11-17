@@ -19,13 +19,17 @@ import { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from "react-native-vector-icons/Ionicons";
 import { GestureHandlerRootView, PinchGestureHandler, State, PanGestureHandler, ScrollView } from 'react-native-gesture-handler'; 
-import SelectDropdown from 'react-native-select-dropdown'
-import SelectList from 'react-native-dropdown-select-list'
+import {Picker} from '@react-native-picker/picker';
+// import SelectList from 'react-native-dropdown-select-list'
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
-
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 
 const widthWindow = Dimensions.get('window').width;
 const heightWindow = Dimensions.get('window').height;
+
+// width and height map in App
+const widthMap = widthWindow*4;
+const heightMap = (heightWindow-(heightWindow*(20/100)));
 
 // lat and long center building : 10.85182111358613, 106.62807166628698
 
@@ -85,6 +89,7 @@ const LONGITUDE_DISTANCE_BOTTOM_VIDO = (LONGITUDE_RIGHT_BOTTOM_VIDO - LONGITUDE_
 const LATITUDE_DISTANCE_RIGHT_VIDO = LATITUDE_DISTANCE_LEFT_VIDO;
 const LONGITUDE_DISTANCE_TOP_VIDO = LONGITUDE_DISTANCE_BOTTOM_VIDO;
 
+// List Floor in build
 const listFloor = [
   {
       floor: "floor0",
@@ -138,18 +143,6 @@ const listFloor = [
     },
 ]
 
-const data = [
-  {key:'0',value:'Tầng Hầm'},
-  {key:'1',value:'Tầng 1'},
-  {key:'2',value:'Sân Trước'},
-  {key:'3',value:'Tầng 2'},
-  {key:'4',value:'Tầng 3'},
-  {key:'5',value:'Tầng 4'},
-  {key:'6',value:'Tầng 5'},
-  {key:'7',value:'Tầng 6'},
-  {key:'8',value:'Tầng 7'},
-  {key:'9',value:'Tầng 8'},
-];
 
 // class Home extends Component {
     
@@ -161,12 +154,15 @@ function DetailMap({navigation}){
     const [isModalVisible, setisModalVisible] = useState(false)
     const [positioningDeviationLAT, setPositioningDeviationLAT] = useState(null);
     const [positioningDeviationLONG, setPositioningDeviationLONG] = useState(null);
-    const [selected, setSelected] = React.useState("");
+    const [selected, setSelected] = React.useState("floor1");
 
-    
-
-    // Animated
-
+    //value Location
+    const [get_Location, set_Location] = useState({
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: 0.001,
+      longitudeDelta: 0.001,
+    });
 
     const [positionTS, setPositionTS] = useState({
 
@@ -178,8 +174,8 @@ function DetailMap({navigation}){
  
 
     const [position, setPosition] = useState({
-        latitude: 10,
-        longitude: 10,
+        latitude: 0,
+        longitude: 0,
         latitudeDelta: 0.001,
         longitudeDelta: 0.001,
       });
@@ -207,34 +203,47 @@ function DetailMap({navigation}){
               longitudeDelta: 0.0421,
             });
           };
+
+          if (get_Location.longitude == 0 && get_Location.latitude == 0) {
+            if ((position.longitude <= 100 && position.longitude >0) && (position.latitude <= 100 && position.latitude > 0)) {
+              set_Location({
+                latitude: position.longitude,
+                longitude: position.latitude,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.0421,
+              });
+            }else {
+              set_Location({
+                latitude: 30,
+                longitude:30,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.0421,
+              });
+            }
+          }else {
+            if (
+              ((Number(position.longitude) <= (get_Location.longitude+5)) && (Number(position.longitude) >= (get_Location.longitude-5)))
+              && 
+              ((Number(position.latitude) <= (get_Location.latitude+5)) && (Number(position.latitude) >= (get_Location.latitude-5)))
+              ) {
+              set_Location({
+                latitude: position.latitude,
+                longitude: position.longitude,
+                latitudeDelta: 0.0421,
+                longitudeDelta: 0.0421,
+              });
+            }
+          }
           
         }).catch((err) => {
           console.log(err);
         });
-      }, [position]);
 
+        // console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
 
-      const scale = useRef(new Animated.Value(1)).current;
+       
 
-      const onZoomEventFunction = Animated.event(
-        [{
-          nativeEvent: { scale: scale }
-        }],
-        {
-          useNativeDriver: true
-        }
-      )
-
-      const onZoomStateChangeFunction = (event) => {
-        if (event.nativeEvent.oldState == State.ACTIVE) {
-          Animated.spring(scale, {
-            toValue:1,
-            useNativeDriver: true,
-            bounciness:1
-          }).start()
-        }
-      }
-
+      }, [position,get_Location]);
       // Modal
       const changeModalVisibility = (bool) => {
         setisModalVisible(bool)
@@ -256,22 +265,55 @@ function DetailMap({navigation}){
                     <Icon5 name="arrow-circle-left" color={'#CB3837'} size={30} />
                   </TouchableOpacity>
                   {/* Search */}
-                    <View style={{ height:'100%', padding:10}}>
-                      <SelectList 
-                          onSelect={() => setFloor(selected)}
-                          setSelected={setSelected}
-                          data={data}
-                          search={false}
-                          boxStyles={{borderRadius:10, backgroundColor:'rgba(255,255,255,0.8)', color: 'black'}}
-                          dropdownStyles={{backgroundColor:'rgba(255,255,255,0.8)', height:'300%'}}
-                          dropdownTextStyles = {{color:'black'}}
-                          defaultOption={{ key:'1', value:'Tầng 1' }}
-                        />
+                    <View style={{ height:'100%', padding:5, position:"absolute", right:10,backfaceVisibility:'visible', borderColor:'black', backgroundColor:'#D1D0D0',borderWidth: 1,borderRadius:20 }}>
+                      <Picker selectedValue= {selected} onValueChange = {(itemValue, itemIndex) => {setSelected(itemValue), setFloor(itemIndex)}} style={{width:170,height:50, }}>
+                        {
+                          listFloor.map((e, index) => 
+                            <Picker.Item key={e} label={listFloor[index].detail} value={listFloor[index].floor} />
+                          )
+                        }
+                      </Picker>
                     </View>
                 </View>
 
+                <View style={{ width:"100%",height:"80%"}}>
+                  <View style={[{width:"100%",height:"100%"}]}>
+                    <ReactNativeZoomableView
+                      maxZoom={3.5}
+                      minZoom={1.0}
+                      zoomStep={0.5}
+                      initialZoom={1.0}
+                      bindToBorders={true}
+                      style={{
+                        // width:"100%",height:"300%", backgroundColor:'red'
+                        // left:String(position.longitude)+"%",  bottom:String(position.latitude)+"%",
+                        // flex: 1,
+                        width:"100%",height:"100%", position:'relative'
+                      }}
+                    >
+                      <View style={{width:"100%",height:"100%", position:'absolute', top:0, left:0}}>
+                        <View style={{width:"100%",height:"100%",position:'relative', }}>
+                          <Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
+                                source={listFloor[getfloor].image}
+                                resizeMode="contain" />
+                          <View style={{ width:100,height:100, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                            <View style={style.view_inpersion_lager}>
+                              <View style={style.view_inpersion}>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                       
+
+                      </View>
+                      
+                    </ReactNativeZoomableView>
+                  </View>
+                  
+                </View>
+
               {/* Chỉnh map (chưa hoàng thiện) */}
-              <View style={{width:'100%', height:'80%', zIndex:100, position:'relative'}}>
+              {/* <View style={{width:'100%', height:'80%', zIndex:100, position:'relative'}}>
                 <GestureHandlerRootView  style={[style.view_map,{transform:[{ rotate: "0deg" }]}]}>
                   <PinchGestureHandler 
                     onGestureEvent = {onZoomEventFunction}
@@ -294,8 +336,8 @@ function DetailMap({navigation}){
                     </View>
                   </View>
                 </View>
-              </View>
-              <View style={{width:'100%', height:'20%', flexDirection:'row', justifyContent:'flex-end'}}>
+              </View> */}
+              <View style={{width:'100%', height:'10%', flexDirection:'row', justifyContent:'flex-end'}}>
                 <TouchableOpacity style={{width:60, height:60, borderRadius:30, alignItems:'center',backgroundColor:'rgba(255, 102, 102, 0.3)', flexDirection:'column', justifyContent:'center',  margin:10, position:'relative', zIndex:100}}
                   onPress={() => {
                     navigation.goBack();
@@ -304,20 +346,6 @@ function DetailMap({navigation}){
                     <Icon5 name="plus-circle" color={'#CB3837'} size={50} />
                 </TouchableOpacity>
               </View>
-              {/* <Text style={{position:'absolute', top:80, left:10}}>
-                {console.log(scale)}
-                {
-                  position.latitude+"||||"+position.longitude+"||||"
-                }
-              </Text> */}
-              {/* <TouchableOpacity 
-              style={style.btn_map_around}
-              onPress={() =>{
-                navigation.navigate("AroundMap")
-              }}>
-                <Image style={style.map_around} source={require("../../drawble/drawbleImg/minimap.png")}/>
-              </TouchableOpacity> */}
-              
             </View>
    </SafeAreaView>
     )
@@ -335,8 +363,8 @@ const style = StyleSheet.create({
     position:'relative', 
   },
   view_map: {
-    width:"500%", 
-    height:'100%', 
+    width:widthMap,
+    height:heightMap,
 
   },
   image_map: {
