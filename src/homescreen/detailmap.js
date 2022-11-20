@@ -205,17 +205,10 @@ function DetailMap({navigation}){
           };
 
           if (get_Location.longitude == 0 && get_Location.latitude == 0) {
-            if ((position.longitude <= 100 && position.longitude >0) && (position.latitude <= 100 && position.latitude > 0)) {
+            if ((position.longitude <= 100 && position.longitude >2) && (position.latitude <= 100 && position.latitude > 2)) {
               set_Location({
                 latitude: position.longitude,
                 longitude: position.latitude,
-                latitudeDelta: 0.0421,
-                longitudeDelta: 0.0421,
-              });
-            }else {
-              set_Location({
-                latitude: 30,
-                longitude:30,
                 latitudeDelta: 0.0421,
                 longitudeDelta: 0.0421,
               });
@@ -239,7 +232,7 @@ function DetailMap({navigation}){
           console.log(err);
         });
 
-        // console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
+        console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
 
        
 
@@ -296,15 +289,14 @@ function DetailMap({navigation}){
                           <Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
                                 source={listFloor[getfloor].image}
                                 resizeMode="contain" />
-                          <View style={{ width:100,height:100, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                          {get_Location.latitude > 0 && get_Location.longitude > 0? <View style={{ width:100,height:100, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
                             <View style={style.view_inpersion_lager}>
                               <View style={style.view_inpersion}>
                               </View>
                             </View>
-                          </View>
+                          </View>: null }
+                          
                         </View>
-                       
-
                       </View>
                       
                     </ReactNativeZoomableView>
