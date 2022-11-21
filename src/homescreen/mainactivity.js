@@ -25,6 +25,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Markers from '../model/mapData';
 
 
 const widthWindow = Dimensions.get('window').width;
@@ -41,11 +42,45 @@ const SPACING_FOR_CARD_INSET = widthWindow * 0.1 - 10;
 const LAT = 10.851655221139566
 const LONG =  106.62816684009636;
 
-
-
 // class Home extends Component {
     
 // }
+
+
+const Images = [
+  { image: require("../../drawble/drawbleImg/logoVido.png") },
+  
+];
+
+const markers = [
+  {
+    coordinate: {
+      latitude: 10.85182111358613,
+      longitude:  106.62807166628698
+    },
+    title: "Cao Đẳng Viễn Đông",
+    description: "Có việc làm đúng ngành",
+    imagelogo: require("../../drawble/drawbleImg/logoVido.png"),
+    image: require("../../drawble/drawbleImg/Banner_Vido.gif"),
+    rating: 4,
+    reviews: 99,
+  },
+  {
+    //10.852058, 106.629597
+    coordinate: {
+      latitude: 10.797441735177092,
+      longitude: 106.65608245760271,
+    },
+    title: "Cao Đẳng Lý Tự Trọng",
+    description: "Trường cao đẳng cộng đồng ở Hồ Chí Minh",
+    imagelogo: require("../../drawble/drawbleImg/Lytutrong.png"),
+    image: require("../../drawble/drawbleImg/Banner_LTT.jpg"),
+    rating: 5,
+    reviews: 102,
+  },
+
+];
+
 
 function HomeActivity({navigation}){
 
@@ -102,14 +137,18 @@ function HomeActivity({navigation}){
         });
     }
 
+    
+
     const runningRequest = () =>{
       if (getLawPermission == false) {
         requestPermission();
         checkPermission();
+        
       }
     }
 
     const [position, setPosition] = useState(null);
+    
 
     const PositionDF = () => {
       Geolocation.getCurrentPosition((pos) => {
@@ -212,7 +251,7 @@ function HomeActivity({navigation}){
                   followsUserLocation={true}
                   showsIndoors={true}
                   userLocationUpdateInterval = {500}>
-                  <Marker
+                  {/* <Marker
                     style={style.marker_point}
                       coordinate={{
                         latitude: 10.85182111358613,
@@ -227,9 +266,26 @@ function HomeActivity({navigation}){
                     <View style={style.marker_point}>
                       <Image style={style.marker_point} source={require("../../drawble/drawbleImg/logoVido.png")}/>
                     </View>
-                  </Marker>
-                   {/* {markers.map((marker, index) => {
-                    return (
+                  </Marker> */}
+
+                  {/* <Marker
+                    style={style.marker_point}
+                      coordinate={{
+                        latitude: 10.797441735177092, 
+                        longitude:  106.65608245760271
+                      }}
+                      title={"Cao Đẳng Lý Tự Trọng"}
+                      description={"Trường cao đẳng cộng đồng ở Hồ Chí Minh"}
+                      onPress={() => {
+                        navigation.navigate("DetailMap")
+                      }}
+                  >
+                    <View style={style.marker_point}>
+                      <Image style={style.marker_point} source={require("../../drawble/drawbleImg/Lytutrong.png")}/>
+                    </View>
+                  </Marker> */}
+                   {markers.map((marker, index) => {
+                     return(
                       <Marker key={index} 
                       coordinate={marker.coordinate} 
                       title={marker.title}
@@ -237,18 +293,18 @@ function HomeActivity({navigation}){
                       onPress={() => {
                         setIndexLocation(index),
                         topView();
+                        // navigation.navigate("DetailMap")
                       }}
                       >
-                          <View style={[style.markerWrap]}>
+                          <View style={style.marker_point}>
                             <Image
-                              source={require('../../drawble/drawbleImg/locationicon.jpg')}
-                              style={[style.marker]}
-                              resizeMode="cover"
+                              source={marker.imagelogo}
+                              style={style.marker_point}
                             />
                           </View>
                       </Marker>
-                    );
-                  })} */}
+                     )
+                  })}
               </MapView>
 
               {/* search and scrollview search */}
@@ -285,7 +341,7 @@ function HomeActivity({navigation}){
               </ScrollView>
 
               {/* View detail */}
-                {/* <Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
+                <Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
                 <Image 
                       source={markers[indexLocation].image}
                       style={style.cardImage}
@@ -293,8 +349,20 @@ function HomeActivity({navigation}){
                     />
                     <View style={style.textContent}>
                       <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
-                      <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
+                      {/* <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} /> */}
                       <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
+                      {/* <Text numberOfLines={1} style={style.cardDescription}>Đánh giá: {markers[indexLocation].rating}</Text>
+                      <Text numberOfLines={1} style={style.cardDescription}>Lược xem: {markers[indexLocation].reviews}</Text> */}
+
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("DetailMap")
+                        }}
+                      >
+                        <View style={{backgroundColor:'green',marginTop:10, padding:10, borderRadius:20, alignItems:'center'}}>
+                          <Text style={{color:'white'}}>Xem bản đồ chi tiết</Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
                         <TouchableOpacity
                           onPress={() => {
@@ -304,7 +372,7 @@ function HomeActivity({navigation}){
                         >
                           <Text style={[style.textSign, {color: '#FF6347'}]}>X</Text>
                         </TouchableOpacity>
-                </Animated.View> */}
+                </Animated.View>
             </View>
    </SafeAreaView>
     )
@@ -327,7 +395,8 @@ const style = StyleSheet.create({
   },
   marker_point: {
     width:25, 
-    height:25
+    height:25,
+    borderRadius:20
   },
   searchBox: {
     position:'absolute', 
