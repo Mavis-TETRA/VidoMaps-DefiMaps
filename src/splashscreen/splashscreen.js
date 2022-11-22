@@ -13,14 +13,14 @@ function Splashscreen({navigation}) {
     setTimeout(() => {
         navigation.navigate('HomeActivity');
     }, 2000);
-    
+
     return (
         <SafeAreaView style={style.main_project}>
             <StatusBar hidden={false} backgroundColor='#ffffff' />
                 <View style={style.main_view}>
                     <View style={style.infor_name}>
                         <View style={style.name_logo}>
-                            <Image style={style.detail_logo} source={require("../../drawble/drawbleImg/Petal_Maps_Logo.png")}></Image>
+                            <Image style={style.detail_logo} source={require("../../drawble/drawbleImg/icon.jpg")}></Image>
                             <Text style={style.detail_name}>DEFIMAPS</Text>
                         </View>
                     </View>
