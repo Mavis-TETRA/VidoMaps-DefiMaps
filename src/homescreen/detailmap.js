@@ -289,7 +289,7 @@ function DetailMap({route, navigation}){
                   </TouchableOpacity>
                   {/* Search */}
                     <View style={{ height:'100%', padding:5, position:"absolute", right:10,backfaceVisibility:'visible', borderColor:'black', backgroundColor:'#D1D0D0',borderWidth: 1,borderRadius:20 }}>
-                      <Picker selectedValue= {selected} onValueChange = {(itemValue, itemIndex) => {setSelected(itemValue), setFloor(itemIndex)}} style={{width:170,height:50, }}>
+                      <Picker selectedValue= {selected} onValueChange = {(itemValue, itemIndex) => {setSelected(itemValue), setFloor(itemIndex)}} style={{width:220,height:50, fontSize:10}}>
                         {
                           listFloor[0].area == id ?  listFloor.map((e, index) => 
                           <Picker.Item key={e} label={listFloor[index].detail} value={listFloor[index].floor} />

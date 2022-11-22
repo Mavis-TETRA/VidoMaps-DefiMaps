@@ -174,7 +174,7 @@ function HomeActivity({navigation}){
     const topView = () => {
       // Will change fadeAnim value to 1 in 5 seconds
       Animated.timing(topMotion, {
-        toValue: Dimensions.get('window').height/90,
+        toValue: Dimensions.get('window').height/12,
         duration: 500,
         useNativeDriver: false
       }).start();
@@ -450,7 +450,7 @@ const style = StyleSheet.create({
   },
   card: {
     width:"95%",
-    height:"40%",
+    height:"35%",
     backgroundColor:"white",
     position:'absolute',
     left:10,
@@ -480,11 +480,12 @@ const style = StyleSheet.create({
       position:"absolute",
       top:5,
       right:5,
-      width: '10%',
+      width: 45,
+      height:45,
       padding:8,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 20,
+      borderRadius: 30,
       backgroundColor:'white'
       
   },
