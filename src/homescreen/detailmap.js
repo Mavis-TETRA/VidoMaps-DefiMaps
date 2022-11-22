@@ -14,15 +14,14 @@ import {
     Modal } from 'react-native';
 import React, { Component } from 'react'
 import { useState, useEffect, useRef } from 'react';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from "react-native-vector-icons/Ionicons";
-import { GestureHandlerRootView, PinchGestureHandler, State, PanGestureHandler, ScrollView } from 'react-native-gesture-handler'; 
 import {Picker} from '@react-native-picker/picker';
 // import SelectList from 'react-native-dropdown-select-list'
 import Icon5 from 'react-native-vector-icons/FontAwesome5';
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+// import ImageViewer from 'react-native-image-zoom-viewer';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const widthWindow = Dimensions.get('window').width;
 const heightWindow = Dimensions.get('window').height;
@@ -92,55 +91,86 @@ const LONGITUDE_DISTANCE_TOP_VIDO = LONGITUDE_DISTANCE_BOTTOM_VIDO;
 // List Floor in build
 const listFloor = [
   {
+      area: 'cd_vido',
       floor: "floor0",
+      user:"lager",
       detail: "Tầng Hầm",
-      image: require("../../drawble/SoDoBoTri/SodoBotriHam.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotriHam.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor1",
+      user:"lager",
       detail: "Tầng 1",
-      image: require("../../drawble/SoDoBoTri/SodoBotri1-1.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1-1.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floorYard",
+      user:"lager",
       detail: "Sân Trước",
-      image: require("../../drawble/SoDoBoTri/SodoBotriSan.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotriSan.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor2",
+      user:"lager",
       detail: "Tầng 2",
-      image: require("../../drawble/SoDoBoTri/SodoBotri2.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri2.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor3",
+      user:"lager",
       detail: "Tầng 3",
-      image: require("../../drawble/SoDoBoTri/SodoBotri3.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri3.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor4",
+      user:"lager",
       detail: "Tầng 4",
-      image: require("../../drawble/SoDoBoTri/SodoBotri4.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri4.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor5",
+      user:"lager",
       detail: "Tầng 5",
-      image: require("../../drawble/SoDoBoTri/SodoBotri5.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri5.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor6",
+      user:"lager",
       detail: "Tầng 6",
-      image: require("../../drawble/SoDoBoTri/SodoBotri6.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri6.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor7",
+      user:"lager",
       detail: "Tầng 7",
-      image: require("../../drawble/SoDoBoTri/SodoBotri7.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri7.jpg")
     },
     {
+      area: 'cd_vido',
       floor: "floor8",
+      user:"lager",
       detail: "Tầng 8",
-      image: require("../../drawble/SoDoBoTri/SodoBotri8.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri8.jpg")
     },
+]
+
+
+const listAreaCDLTT = [
+  {
+    area: "cd_lytutrong",
+    floor: "floor1",
+    user:"small",
+    detail: "Khuôn viên",
+    image: require("../../drawble/SoDoBoTri/LTT_school/mapLTT.png")
+  },
 ]
 
 
@@ -148,13 +178,14 @@ const listFloor = [
     
 // }
 
-function DetailMap({navigation}){
+function DetailMap({route, navigation}){
 
     const [getfloor, setFloor] = useState(1)
     const [isModalVisible, setisModalVisible] = useState(false)
     const [positioningDeviationLAT, setPositioningDeviationLAT] = useState(null);
     const [positioningDeviationLONG, setPositioningDeviationLONG] = useState(null);
     const [selected, setSelected] = React.useState("floor1");
+    const {id} = route.params;
 
     //value Location
     const [get_Location, set_Location] = useState({
@@ -232,15 +263,14 @@ function DetailMap({navigation}){
           console.log(err);
         });
 
-        console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
-
-       
-
+        // console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
       }, [position,get_Location]);
       // Modal
-      const changeModalVisibility = (bool) => {
-        setisModalVisible(bool)
-      }
+      // const changeModalVisibility = (bool) => {
+      //   setisModalVisible(bool)
+      // }
+
+    
 
     return (
         <SafeAreaView style={style.main_project}>
@@ -261,9 +291,11 @@ function DetailMap({navigation}){
                     <View style={{ height:'100%', padding:5, position:"absolute", right:10,backfaceVisibility:'visible', borderColor:'black', backgroundColor:'#D1D0D0',borderWidth: 1,borderRadius:20 }}>
                       <Picker selectedValue= {selected} onValueChange = {(itemValue, itemIndex) => {setSelected(itemValue), setFloor(itemIndex)}} style={{width:170,height:50, }}>
                         {
-                          listFloor.map((e, index) => 
-                            <Picker.Item key={e} label={listFloor[index].detail} value={listFloor[index].floor} />
-                          )
+                          listFloor[0].area == id ?  listFloor.map((e, index) => 
+                          <Picker.Item key={e} label={listFloor[index].detail} value={listFloor[index].floor} />
+                        ):  listAreaCDLTT.map((e, index) => 
+                        <Picker.Item key={e} label={listAreaCDLTT[index].detail} value={listFloor[index].floor} />
+                        )
                         }
                       </Picker>
                     </View>
@@ -274,61 +306,31 @@ function DetailMap({navigation}){
                     <ReactNativeZoomableView
                       maxZoom={3.5}
                       minZoom={1.0}
-                      zoomStep={0.5}
+                     
                       initialZoom={1.0}
-                      bindToBorders={true}
                       style={{
-                        // width:"100%",height:"300%", backgroundColor:'red'
-                        // left:String(position.longitude)+"%",  bottom:String(position.latitude)+"%",
-                        // flex: 1,
                         width:"100%",height:"100%", position:'relative'
                       }}
                     >
                       <View style={{width:"100%",height:"100%", position:'absolute', top:0, left:0}}>
                         <View style={{width:"100%",height:"100%",position:'relative', }}>
-                          <Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
+                          {listFloor[0].area == id?<Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
                                 source={listFloor[getfloor].image}
+                                resizeMode="contain" />:<Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
+                                source={listAreaCDLTT[0].image}
                                 resizeMode="contain" />
-                          {get_Location.latitude > 0 && get_Location.longitude > 0? <View style={{ width:100,height:100, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                              }
+                          {get_Location.latitude > 0 && get_Location.longitude > 0? <View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
                             <View style={style.view_inpersion_lager}>
                               <View style={style.view_inpersion}>
                               </View>
                             </View>
                           </View>: null }
-                          
                         </View>
                       </View>
-                      
                     </ReactNativeZoomableView>
                   </View>
-                  
                 </View>
-
-              {/* Chỉnh map (chưa hoàng thiện) */}
-              {/* <View style={{width:'100%', height:'80%', zIndex:100, position:'relative'}}>
-                <GestureHandlerRootView  style={[style.view_map,{transform:[{ rotate: "0deg" }]}]}>
-                  <PinchGestureHandler 
-                    onGestureEvent = {onZoomEventFunction}
-                    onHandlerStateChange = {onZoomStateChangeFunction}
-                  >
-                    <Animated.Image 
-                      source={listFloor[getfloor].image} 
-                      style={{ width:"80%",height:"100%", alignItems:'center',
-                        transform:[
-                          {scale: scale}
-                        ]
-                      }}
-                      resizeMode={'stretch'}
-                    />
-                  </PinchGestureHandler>
-                </GestureHandlerRootView>
-                <View style={{ width:100,height:100, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',  left:String(position.longitude)+"%",  bottom:String(position.latitude)+"%",  alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
-                  <View style={style.view_inpersion_lager}>
-                    <View style={style.view_inpersion}>
-                    </View>
-                  </View>
-                </View>
-              </View> */}
               <View style={{width:'100%', height:'10%', flexDirection:'row', justifyContent:'flex-end'}}>
                 <TouchableOpacity style={{width:60, height:60, borderRadius:30, alignItems:'center',backgroundColor:'rgba(255, 102, 102, 0.3)', flexDirection:'column', justifyContent:'center',  margin:10, position:'relative', zIndex:100}}
                   onPress={() => {

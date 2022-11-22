@@ -20,8 +20,8 @@ function Splashscreen({navigation}) {
                 <View style={style.main_view}>
                     <View style={style.infor_name}>
                         <View style={style.name_logo}>
-                            <Image style={style.detail_logo} source={require("../../drawble/drawbleImg/Petal_Maps_Logo.png")}></Image>
-                            <Text style={style.detail_name}>DEFIMAPS</Text>
+                            <Image style={style.detail_logo} source={require("../../drawble/drawbleImg/logo_Map.jpg")}></Image>
+                            {/* <Text style={style.detail_name}>DEFIMAPS</Text> */}
                         </View>
                     </View>
                     <View style={style.view_design}>
@@ -68,8 +68,8 @@ const style = StyleSheet.create({
     },
 
     detail_logo: {
-        width:100, 
-        height:100
+        width:200, 
+        height:200
     },
 
     detail_name: {

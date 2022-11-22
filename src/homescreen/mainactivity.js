@@ -13,13 +13,13 @@ import {
     Animated,
     AppRegistry,
     BackHandler,
-    Platform } from 'react-native';
+    Platform,ScrollView } from 'react-native';
 import React, { Component } from 'react'
 import { useState, useEffect, useRef } from 'react';
 import MapView from 'react-native-maps';
 import { Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
-import { GestureHandlerRootView, PinchGestureHandler, State, PanGestureHandler, ScrollView } from 'react-native-gesture-handler';
+
 import { check, PERMISSIONS, RESULTS, request, checkMultiple, requestMultiple, openSettings } from 'react-native-permissions'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -58,6 +58,7 @@ const markers = [
       latitude: 10.85182111358613,
       longitude:  106.62807166628698
     },
+    id:"cd_vido",
     title: "Cao Đẳng Viễn Đông",
     description: "Có việc làm đúng ngành",
     imagelogo: require("../../drawble/drawbleImg/logoVido.png"),
@@ -71,6 +72,7 @@ const markers = [
       latitude: 10.797441735177092,
       longitude: 106.65608245760271,
     },
+    id : "cd_lytutrong",
     title: "Cao Đẳng Lý Tự Trọng",
     description: "Trường cao đẳng cộng đồng ở Hồ Chí Minh",
     imagelogo: require("../../drawble/drawbleImg/Lytutrong.png"),
@@ -156,6 +158,7 @@ function HomeActivity({navigation}){
         setPosition({
           latitude: crd.latitude ,
           longitude: crd.longitude ,
+         
           latitudeDelta: 0.0421,
           longitudeDelta: 0.0421,
         });
@@ -166,12 +169,12 @@ function HomeActivity({navigation}){
     }
 
     const [indexLocation, setIndexLocation] = useState(1);
-    const topMotion = useRef(new Animated.Value(-500)).current;
+    const topMotion = useRef(new Animated.Value(-(Dimensions.get('window').height))).current;
 
     const topView = () => {
       // Will change fadeAnim value to 1 in 5 seconds
       Animated.timing(topMotion, {
-        toValue: 10,
+        toValue: Dimensions.get('window').height/90,
         duration: 500,
         useNativeDriver: false
       }).start();
@@ -180,7 +183,7 @@ function HomeActivity({navigation}){
     const bottomView = () => {
       // Will change fadeAnim value to 1 in 5 seconds
       Animated.timing(topMotion, {
-        toValue: -500,
+        toValue: (-(Dimensions.get('window').height)),
         duration: 500,
         useNativeDriver: false
       }).start();
@@ -190,6 +193,7 @@ function HomeActivity({navigation}){
         if (position == null) {
           PositionDF();
           Geolocation.stopObserving();
+          console.log(topMotion);
         }
         runningRequest();
       });
@@ -221,14 +225,7 @@ function HomeActivity({navigation}){
         }
       )
 
-      const onZoomStateChangeFunction = (event) => {
-        if (event.nativeEvent.oldState == State.ACTIVE) {
-          Animated.spring(scale, {
-            toValue:1,
-            useNativeDriver: true
-          }).start()
-        }
-      }
+   
     return (
         <SafeAreaView style={style.main_project}>
           <StatusBar
@@ -269,19 +266,16 @@ function HomeActivity({navigation}){
                   </Marker> */}
 
                   {/* <Marker
-                    style={style.marker_point}
+                    style={{}}
                       coordinate={{
-                        latitude: 10.797441735177092, 
-                        longitude:  106.65608245760271
+                        latitude: 10.796775414948181,  
+                        longitude:  106.65606719267605,
                       }}
-                      title={"Cao Đẳng Lý Tự Trọng"}
-                      description={"Trường cao đẳng cộng đồng ở Hồ Chí Minh"}
-                      onPress={() => {
-                        navigation.navigate("DetailMap")
-                      }}
+                      title={"Me"}
+                      description={""}
+                      
                   >
-                    <View style={style.marker_point}>
-                      <Image style={style.marker_point} source={require("../../drawble/drawbleImg/Lytutrong.png")}/>
+                    <View style={{backgroundColor:'blue', width:10, height:10, borderRadius:20}}>
                     </View>
                   </Marker> */}
                    {markers.map((marker, index) => {
@@ -293,7 +287,7 @@ function HomeActivity({navigation}){
                       onPress={() => {
                         setIndexLocation(index),
                         topView();
-                        // navigation.navigate("DetailMap")
+                       
                       }}
                       >
                           <View style={style.marker_point}>
@@ -356,7 +350,11 @@ function HomeActivity({navigation}){
 
                       <TouchableOpacity
                         onPress={() => {
-                          navigation.navigate("DetailMap")
+                          // bottomView();
+                          navigation.navigate("DetailMap", {
+                            id: markers[indexLocation].id
+                          });
+                         
                         }}
                       >
                         <View style={{backgroundColor:'green',marginTop:10, padding:10, borderRadius:20, alignItems:'center'}}>

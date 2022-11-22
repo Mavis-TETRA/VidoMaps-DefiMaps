@@ -213,10 +213,10 @@ function AroundMap({navigation}){
                       [10.851486851274974, 106.62827883567216],
                       [10.851498046934633,106.62806224728455],
                     ]}
-                     image={require("../../drawble/SoDoBoTri/SodoBotri1.jpg")}
+                     image={require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1.jpg")}
                     /> */}
                     <Overlay
-                     image={require("../../drawble/SoDoBoTri/SodoBotri1.jpg")}
+                     image={require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1.jpg")}
                       bounds={[
                         [10.851495319241918, 106.62806068119448], 
                         [10.852020040395047, 106.62831266801642],
@@ -250,7 +250,7 @@ function AroundMap({navigation}){
                       }}
                       title={"Cao Đẳng Viễn Đông"}
                       description={"Có việc làm đúng ngành"}
-                      image={require("../../drawble/SoDoBoTri/SodoBotri1.jpg")}
+                      image={require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1.jpg")}
                     /> */}
                      {/* <Marker
                     style={[style.marker_point, {transform:[{ rotate: "100deg" }]}]}
@@ -262,7 +262,7 @@ function AroundMap({navigation}){
                       description={"Có việc làm đúng ngành"}
                   >
                     <View style={style.marker_point}>
-                      <Image style={style.marker_point} source={require("../../drawble/SoDoBoTri/SodoBotri1.jpg")}/>
+                      <Image style={style.marker_point} source={require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1.jpg")}/>
                     </View>
                   </Marker> */}
                     {/* {

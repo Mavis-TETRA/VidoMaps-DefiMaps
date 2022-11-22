@@ -62,52 +62,52 @@ const listFloor = [
   {
       floor: "floor0",
       detail: "Tầng Hầm",
-      image: require("../../drawble/SoDoBoTri/SodoBotriHam.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotriHam.jpg")
     },
     {
       floor: "floor1",
       detail: "Tầng 1",
-      image: require("../../drawble/SoDoBoTri/SodoBotri1-1.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri1-1.jpg")
     },
     {
       floor: "floorYard",
       detail: "Sân Trước",
-      image: require("../../drawble/SoDoBoTri/SodoBotriSan.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotriSan.jpg")
     },
     {
       floor: "floor2",
       detail: "Tầng 2",
-      image: require("../../drawble/SoDoBoTri/SodoBotri2.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri2.jpg")
     },
     {
       floor: "floor3",
       detail: "Tầng 3",
-      image: require("../../drawble/SoDoBoTri/SodoBotri3.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri3.jpg")
     },
     {
       floor: "floor4",
       detail: "Tầng 4",
-      image: require("../../drawble/SoDoBoTri/SodoBotri4.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri4.jpg")
     },
     {
       floor: "floor5",
       detail: "Tầng 5",
-      image: require("../../drawble/SoDoBoTri/SodoBotri5.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri5.jpg")
     },
     {
       floor: "floor6",
       detail: "Tầng 6",
-      image: require("../../drawble/SoDoBoTri/SodoBotri6.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri6.jpg")
     },
     {
       floor: "floor7",
       detail: "Tầng 7",
-      image: require("../../drawble/SoDoBoTri/SodoBotri7.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri7.jpg")
     },
     {
       floor: "floor8",
       detail: "Tầng 8",
-      image: require("../../drawble/SoDoBoTri/SodoBotri8.jpg")
+      image: require("../../drawble/SoDoBoTri/Vido_school/SodoBotri8.jpg")
     },
 ]
 
