@@ -13,6 +13,7 @@ import HomeActivity from './homescreen/mainactivity';
 import Transfer from './feature/transfer/transfer';
 import DetailMap from './homescreen/detailmap';
 import AroundMap from './homescreen/aroundmap';
+import LocationDetail from './homescreen/locationdetails';
 
 // Feature
 import Contribute from './feature/contribute/contribute';
@@ -72,9 +73,11 @@ function RootComponent() {
       {/* Rest of your app code */}
         <Stack.Navigator initialRouteName="Splashscreen" screenOptions={{headerShown: false}}>
           <Stack.Screen name="Splashscreen" component={Splashscreen} />
-          <Stack.Screen name="HomeActivity" component={MyTabs} />
+          <Stack.Screen name="HomeActivity" component={HomeActivity} />
           <Stack.Screen name="DetailMap" component={DetailMap} />
           <Stack.Screen name="AroundMap" component={AroundMap} />
+          <Stack.Screen name="LocationDetail" component={LocationDetail} />
+
         </Stack.Navigator>
       </NavigationContainer>
     )

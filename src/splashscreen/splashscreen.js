@@ -88,9 +88,8 @@ const style = StyleSheet.create({
     },
 
     detail_design: {
-        width:"80%", 
-        height:"40%",
-        marginBottom:20,
+        width:200, 
+        height:200,
         alignItems:"center",
         flexDirection:'column', 
         justifyContent:"center"

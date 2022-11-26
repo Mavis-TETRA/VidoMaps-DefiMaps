@@ -26,6 +26,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Markers from '../model/mapData';
+import StarRating from '../component/StarRating';
 
 
 const widthWindow = Dimensions.get('window').width;
@@ -62,7 +63,8 @@ const markers = [
     title: "Cao Đẳng Viễn Đông",
     description: "Có việc làm đúng ngành",
     imagelogo: require("../../drawble/drawbleImg/logoVido.png"),
-    image: require("../../drawble/drawbleImg/Banner_Vido.gif"),
+    imagebanner: require("../../drawble/drawbleImg/Banner_Vido.gif"),
+    image: [require("../../drawble/drawbleImg/Banner_Vido.gif"),require("../../drawble/drawbleImg/viendong.jpg")],
     rating: 4,
     reviews: 99,
   },
@@ -76,12 +78,108 @@ const markers = [
     title: "Cao Đẳng Lý Tự Trọng",
     description: "Trường cao đẳng cộng đồng ở Hồ Chí Minh",
     imagelogo: require("../../drawble/drawbleImg/Lytutrong.png"),
-    image: require("../../drawble/drawbleImg/Banner_LTT.jpg"),
+    imagebanner: require("../../drawble/drawbleImg/Banner_LTT.jpg"),
+    image: [require("../../drawble/drawbleImg/Banner_LTT.jpg"),require("../../drawble/drawbleImg/lytutrong.jpg")],
     rating: 5,
     reviews: 102,
   },
 
+  {
+    coordinate: {
+      latitude: 10.796531543810197, 
+      longitude:  106.65712176038048
+    },
+    id:"hong_phat_com",
+    title: "Cơm gà hồng phát",
+    description: "Cơm là phải ngon.",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/banner_hongphat.png"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_hongphat.png"),
+    image: [require("../../drawble/drawbleImg/image_ad/tiệm cơm gà Hồng Phát.jpg"), require("../../drawble/drawbleImg/image_ad/tiệm cơm gà Hồng Phát2.jpg")],
+    rating: 4,
+    reviews: 109,
+  },
+
+  {
+    coordinate: {
+      latitude: 10.79614162506003, 
+      longitude:  106.65635108009506
+    },
+    id:"TEXAS_CHICKEN",
+    title: "TEXAS CHICKEN",
+    description: "Bigger. Juicier. Crunchier",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/images.png"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/chicken_banner.jpg"),
+    image: [require("../../drawble/drawbleImg/image_ad/Texas.jpg"), require("../../drawble/drawbleImg/image_ad/Texas2.jpg")],
+    rating: 4,
+    reviews: 99,
+  },
+
+  {
+    coordinate: {
+      latitude: 10.796258212539934, 
+      longitude:  106.65505242344013
+    },
+    id:"khanh_nguyen_su",
+    title: "Bánh su Khánh Nguyễn",
+    description: "Bánh su ngon sài thành.",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/banner_khanhnguyen.jpg"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_khanhnguyen.jpg"),
+    image: [require("../../drawble/drawbleImg/image_ad/Bánh Su Khánh Nguyễn .png"),require("../../drawble/drawbleImg/image_ad/Bánh Su Khánh Nguyễn 2.png")],
+    rating: 5,
+    reviews: 299,
+  },
+
+  {
+    coordinate: {
+      latitude: 10.795858225784471, 
+      longitude:  106.65418298836633 
+    },
+    id:"mon_fastfood",
+    title: "Quán Moon Fast Food",
+    description: "Fast and Good",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/banner_mon.jpg"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_mon.jpg"),
+    image: [require("../../drawble/drawbleImg/image_ad/Quán Moon Fast Food.png"),require("../../drawble/drawbleImg/image_ad/Quán Moon Fast Food2.png")],
+    rating: 4,
+    reviews: 99,
+  },
+
+  {
+    coordinate: {
+      latitude: 10.795929048495037, 
+      longitude:  106.65544082321642
+    },
+    id:"Beefsteak_sister",
+    title: "Beefsteak Hai Chị Em",
+    description: "Beefsteak ngon, giá rẻ.",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/banner_sister.jpg"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_sister.jpg"),
+    image: [require("../../drawble/drawbleImg/image_ad/Beefsteak Hai Chị Em.jpg"),require("../../drawble/drawbleImg/image_ad/Beefsteak Hai Chị Em2.png")],
+    rating: 5,
+    reviews: 79,
+  },
+
+  {
+    coordinate: {
+      latitude: 10.796591777837238,
+      longitude: 106.65855545890962
+    },
+    id:"coffee_kai",
+    title: "KAI Coffee - Út Tịch",
+    description: "Coffee and Chill",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/banner_kai.jpg"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_kai.jpg"),
+    image: [require("../../drawble/drawbleImg/image_ad/KAI Coffee - Út Tịch.png"),require("../../drawble/drawbleImg/image_ad/Quán Moon Fast Food2.png")],
+    rating: 5,
+    reviews: 129,
+  },
+ 
 ];
+
+const markers_ad = [
+
+
+]
 
 
 function HomeActivity({navigation}){
@@ -110,7 +208,7 @@ function HomeActivity({navigation}){
    
     const requestPermission = () => {
       request(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION).then((response) => {
-        console.log(response)
+        // console.log(response)
       })
     }
 
@@ -120,16 +218,16 @@ function HomeActivity({navigation}){
           switch (result) {
             case RESULTS.DENIED:
               BackHandler.exitApp();
-              console.log('The permission has not been requested / is denied but requestable');
+              // console.log('The permission has not been requested / is denied but requestable');
               
               break;
             case RESULTS.GRANTED:
-              console.log('The permission is granted');
+              // console.log('The permission is granted');
               setLawPermission(true)
               break;
             case RESULTS.BLOCKED:
               BackHandler.exitApp();
-              console.log('The permission is denied and not requestable anymore');
+              // console.log('The permission is denied and not requestable anymore');
               
               break;
           }
@@ -170,11 +268,13 @@ function HomeActivity({navigation}){
 
     const [indexLocation, setIndexLocation] = useState(1);
     const topMotion = useRef(new Animated.Value(-(Dimensions.get('window').height))).current;
+    const topMotionAD = useRef(new Animated.Value(-(Dimensions.get('window').height))).current;
+
 
     const topView = () => {
       // Will change fadeAnim value to 1 in 5 seconds
       Animated.timing(topMotion, {
-        toValue: Dimensions.get('window').height/12,
+        toValue: Dimensions.get('window').height/30,
         duration: 500,
         useNativeDriver: false
       }).start();
@@ -189,11 +289,28 @@ function HomeActivity({navigation}){
       }).start();
     };
 
+    const topViewAD = () => {
+      // Will change fadeAnim value to 1 in 5 seconds
+      Animated.timing(topMotionAD, {
+        toValue: Dimensions.get('window').height/12,
+        duration: 500,
+        useNativeDriver: false
+      }).start();
+    };
+
+    const bottomViewAD = () => {
+      // Will change fadeAnim value to 1 in 5 seconds
+      Animated.timing(topMotionAD, {
+        toValue: (-(Dimensions.get('window').height)),
+        duration: 500,
+        useNativeDriver: false
+      }).start();
+    };
+
       useEffect(() => {
         if (position == null) {
           PositionDF();
           Geolocation.stopObserving();
-          console.log(topMotion);
         }
         runningRequest();
       });
@@ -224,7 +341,53 @@ function HomeActivity({navigation}){
           useNativeDriver: true
         }
       )
-
+      const mapStyle = [
+        {
+          "featureType": "landscape.man_made",
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.attraction",
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.business",
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.business",
+          "elementType": "labels.text",
+          "stylers": [
+            {
+              "visibility": "on"
+            }
+          ]
+        },
+        {
+          "featureType": "poi.government",
+          "elementType": "labels.icon",
+          "stylers": [
+            {
+              "visibility": "off"
+            }
+          ]
+        }
+      ]
    
     return (
         <SafeAreaView style={style.main_project}>
@@ -246,8 +409,12 @@ function HomeActivity({navigation}){
                   minZoomLevel={0}
                   maxZoomLevel={50}
                   followsUserLocation={true}
+                  showsCompass={true}
+                  showsBuildings={true}
+                  customMapStyle={mapStyle}
                   showsIndoors={true}
-                  userLocationUpdateInterval = {500}>
+                  userLocationUpdateInterval = {500}
+                  >
                   {/* <Marker
                     style={style.marker_point}
                       coordinate={{
@@ -278,6 +445,7 @@ function HomeActivity({navigation}){
                     <View style={{backgroundColor:'blue', width:10, height:10, borderRadius:20}}>
                     </View>
                   </Marker> */}
+           
                    {markers.map((marker, index) => {
                      return(
                       <Marker key={index} 
@@ -287,7 +455,6 @@ function HomeActivity({navigation}){
                       onPress={() => {
                         setIndexLocation(index),
                         topView();
-                       
                       }}
                       >
                           <View style={style.marker_point}>
@@ -299,6 +466,29 @@ function HomeActivity({navigation}){
                       </Marker>
                      )
                   })}
+
+                  {/* Marker Ad */}
+                  {/* {markers_ad.map((marker_ad, id) => {
+                     return(
+                      <Marker key={id} 
+                      coordinate={marker_ad.coordinate} 
+                      title={marker_ad.title}
+                      description={marker_ad.description}
+                      onPress={() => {
+                        setIndexLocation(id),
+                        topViewAD();
+                       
+                      }}
+                      >
+                          <View style={style.markers_point}>
+                            <Image
+                              source={marker_ad.imagelogo}
+                              style={style.marker_point}
+                            />
+                          </View>
+                      </Marker>
+                     )
+                  })} */}
               </MapView>
 
               {/* search and scrollview search */}
@@ -335,19 +525,48 @@ function HomeActivity({navigation}){
               </ScrollView>
 
               {/* View detail */}
-                <Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
+
+              {markers[indexLocation].id == "cd_vido" || markers[indexLocation].id == "cd_lytutrong" ? <Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
                 <Image 
-                      source={markers[indexLocation].image}
+                      source={markers[indexLocation].imagebanner}
                       style={style.cardImage}
                       resizeMode="cover"
                     />
                     <View style={style.textContent}>
-                      <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
-                      {/* <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} /> */}
-                      <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
-                      {/* <Text numberOfLines={1} style={style.cardDescription}>Đánh giá: {markers[indexLocation].rating}</Text>
-                      <Text numberOfLines={1} style={style.cardDescription}>Lược xem: {markers[indexLocation].reviews}</Text> */}
-
+                      <View style={{flexDirection:'row',padding:10}}>
+                        <View style={{flex:1}}>
+                          <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
+                          <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
+                          <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
+                     
+                        </View>
+                        <View style={{flex:1}}>
+                          <TouchableOpacity
+                          onPress={() => {
+                            // bottomView();
+                            navigation.navigate("LocationDetail", {
+                              coordinate: {
+                                latitude: markers[indexLocation].coordinate.latitude,
+                                longitude:  markers[indexLocation].coordinate.longitude
+                              },
+                              id:markers[indexLocation].id,
+                              title: markers[indexLocation].title,
+                              description: markers[indexLocation].description,
+                              imagelogo: markers[indexLocation].imagelogo,
+                              imagebanner: markers[indexLocation].imagebanner,
+                              image: markers[indexLocation].image,
+                              rating: markers[indexLocation].rating,
+                              reviews: markers[indexLocation].reviews,
+                            },);
+                          }}
+                          >
+                          <View style={{backgroundColor:'#CB3837',marginTop:10, padding:10, borderRadius:20, alignItems:'center'}}>
+                            <Text style={{color:'white'}}>Xem chi tiết</Text>
+                          </View>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      
                       <TouchableOpacity
                         onPress={() => {
                           // bottomView();
@@ -370,7 +589,73 @@ function HomeActivity({navigation}){
                         >
                           <Text style={[style.textSign, {color: '#FF6347'}]}>X</Text>
                         </TouchableOpacity>
-                </Animated.View>
+                </Animated.View> :<Animated.View style={[style.card, {bottom:topMotion}]} key={indexLocation}>
+                <Image 
+                      source={markers[indexLocation].imagebanner}
+                      style={style.cardImage}
+                      resizeMode="cover"
+                    />
+                    <View style={style.textContent}>
+                      <View style={{flexDirection:'row',padding:10}}>
+                        <View style={{flex:1}}>
+                          <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
+                          <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
+                          <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
+       
+                        </View>
+                        <View style={{flex:1}}>
+                          <TouchableOpacity
+                          onPress={() => {
+                            // bottomView();
+                            navigation.navigate("LocationDetail", {
+                              coordinate: {
+                                latitude: markers[indexLocation].coordinate.latitude,
+                                longitude:  markers[indexLocation].coordinate.longitude
+                              },
+                              id:markers[indexLocation].id,
+                              title: markers[indexLocation].title,
+                              description: markers[indexLocation].description,
+                              imagelogo: markers[indexLocation].imagelogo,
+                              imagebanner: markers[indexLocation].imagebanner,
+                              image: markers[indexLocation].image,
+                              rating: markers[indexLocation].rating,
+                              reviews: markers[indexLocation].reviews,
+                            });
+                          }}
+                          >
+                          <View style={{backgroundColor:'#CB3837',marginTop:10, padding:10, borderRadius:20, alignItems:'center'}}>
+                            <Text style={{color:'white'}}>Xem chi tiết</Text>
+                          </View>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => {
+                          // bottomView();
+                          // navigation.navigate("DetailMap", {
+                          //   id: markers[indexLocation].id
+                          // });
+                         
+                        }}
+                      >
+                        <View style={{backgroundColor:'#CB3837',marginTop:10, padding:10, borderRadius:20, alignItems:'center', flexDirection:'row', justifyContent:'center', width:"40%"}}>
+                          <Icon name="map-marked-alt" color={'white'} size={20} />
+                          <Text style={{color:'white'}}> Gọi điện thoại</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                        <TouchableOpacity
+                          onPress={() => {
+                            bottomView();
+                          }}
+                          style={[style.signIn, {borderColor: '#FF6347', borderWidth: 1}]}
+                        >
+                          <Text style={[style.textSign, {color: '#FF6347'}]}>X</Text>
+                        </TouchableOpacity>
+                </Animated.View> }
+                
+                {/* VIew AD */}
+                
             </View>
    </SafeAreaView>
     )
@@ -450,7 +735,7 @@ const style = StyleSheet.create({
   },
   card: {
     width:"95%",
-    height:"35%",
+    height:"45%",
     backgroundColor:"white",
     position:'absolute',
     left:10,

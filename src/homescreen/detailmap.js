@@ -187,13 +187,29 @@ function DetailMap({route, navigation}){
     const [selected, setSelected] = React.useState("floor1");
     const {id} = route.params;
 
+    const locationMotionLeft = useRef(new Animated.Value(0)).current;
+    const locationMotionBottom = useRef(new Animated.Value(0)).current;
+
     //value Location
-    const [get_Location, set_Location] = useState({
+    const [get_LocationDirect, set_LocationDirect] = useState({
       latitude: 0,
       longitude: 0,
       latitudeDelta: 0.001,
       longitudeDelta: 0.001,
     });
+
+
+
+
+
+    const [get_LocationExact, set_LocationExact] = useState({
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: 0.001,
+      longitudeDelta: 0.001,
+    });
+
+
 
     const [positionTS, setPositionTS] = useState({
 
@@ -235,36 +251,93 @@ function DetailMap({route, navigation}){
             });
           };
 
-          if (get_Location.longitude == 0 && get_Location.latitude == 0) {
-            if ((position.longitude <= 100 && position.longitude >2) && (position.latitude <= 100 && position.latitude > 2)) {
-              set_Location({
-                latitude: position.longitude,
-                longitude: position.latitude,
-                latitudeDelta: 0.0421,
-                longitudeDelta: 0.0421,
-              });
-            }
-          }else {
-            if (
-              ((Number(position.longitude) <= (get_Location.longitude+5)) && (Number(position.longitude) >= (get_Location.longitude-5)))
-              && 
-              ((Number(position.latitude) <= (get_Location.latitude+5)) && (Number(position.latitude) >= (get_Location.latitude-5)))
-              ) {
-              set_Location({
+          if (get_LocationDirect.longitude == 0 && get_LocationDirect.latitude == 0) {
+            if ((position.longitude <= 84 && position.longitude >2) && (position.latitude <= 84 && position.latitude > 2)) {
+              // set_LocationDirect({
+              //   latitude: position.longitude,
+              //   longitude: position.latitude,
+              //   latitudeDelta: 0.0421,
+              //   longitudeDelta: 0.0421,
+              // });
+              
+              set_LocationExact({
                 latitude: position.latitude,
                 longitude: position.longitude,
                 latitudeDelta: 0.0421,
                 longitudeDelta: 0.0421,
               });
             }
+          }else {
+            if (
+                  (position.longitude <= 84 && position.longitude >2) && (position.latitude <= 84 && position.latitude > 2) && (
+                  ((Number(position.longitude) <= (get_LocationDirect.longitude+5)) && (Number(position.longitude) >= (get_LocationDirect.longitude-5)))
+                  && 
+                  ((Number(position.latitude) <= (get_LocationDirect.latitude+5)) && (Number(position.latitude) >= (get_LocationDirect.latitude-5)))
+                  )) {
+                    set_LocationExact({
+                      latitude: position.latitude,
+                      longitude: position.longitude,
+                      latitudeDelta: 0.0421,
+                      longitudeDelta: 0.0421,
+                    });
+                  }
           }
-          
+          // else {
+          //   if (
+          //     (position.longitude <= 100 && position.longitude >2) && (position.latitude <= 100 && position.latitude > 2) && (
+          //     ((Number(position.longitude) <= (get_LocationDirect.longitude+5)) && (Number(position.longitude) >= (get_LocationDirect.longitude-5)))
+          //     && 
+          //     ((Number(position.latitude) <= (get_LocationDirect.latitude+5)) && (Number(position.latitude) >= (get_LocationDirect.latitude-5)))
+          //     )) {
+          //     set_LocationDirect({
+          //       latitude: position.latitude,
+          //       longitude: position.longitude,
+          //       latitudeDelta: 0.0421,
+          //       longitudeDelta: 0.0421,
+          //     });
+          //     set_LocationExact({
+          //       latitude: position.latitude,
+          //       longitude: position.longitude,
+          //       latitudeDelta: 0.0421,
+          //       longitudeDelta: 0.0421,
+          //     });
+          //   } else if ((position.longitude <= 100 && position.longitude >2) && (position.latitude <= 100 && position.latitude > 2)) {
+          //     set_LocationDirect({
+          //       latitude: position.latitude,
+          //       longitude: position.longitude,
+          //       latitudeDelta: 0.0421,
+          //       longitudeDelta: 0.0421,
+          //     });
+          //   } 
+          // }
+          console.log(get_LocationExact.latitude+"||||"+ get_LocationExact.longitude+"||||"+position.longitude+"|||"+position.latitude)
         }).catch((err) => {
           console.log(err);
         });
-
-        // console.log(position.longitude+"|||"+position.latitude+"======"+get_Location.longitude+"||||"+get_Location.latitude);
-      }, [position,get_Location]);
+       setTimeout(() => {
+        Animated.sequence([
+          Animated.parallel([
+            Animated.timing(
+              locationMotionLeft, 
+              {
+                // toValue:get_LocationExact.latitude*(Dimensions.get('window').width/126),
+                toValue: 85*(Dimensions.get('window').width/126),
+                duration: 400,
+                useNativeDriver: false
+              }),
+  
+              Animated.timing(
+                locationMotionBottom, 
+                {
+                  // toValue:get_LocationExact.longitude*(Dimensions.get('window').height/126),
+                  toValue: 106*(Dimensions.get('window').width/126),
+                  duration: 400,
+                  useNativeDriver: false
+                })
+          ])
+        ]).start();
+       },1000);
+      }, [position,get_LocationDirect, locationMotionBottom, locationMotionLeft]);
       // Modal
       // const changeModalVisibility = (bool) => {
       //   setisModalVisible(bool)
@@ -320,12 +393,19 @@ function DetailMap({route, navigation}){
                                 source={listAreaCDLTT[0].image}
                                 resizeMode="contain" />
                               }
-                          {get_Location.latitude > 0 && get_Location.longitude > 0? <View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(String(get_Location.latitude)+"%"),  bottom:(String(get_Location.longitude)+"%"), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                          {/* {(listFloor[0].area == id)? <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
                             <View style={style.view_inpersion_lager}>
                               <View style={style.view_inpersion}>
                               </View>
                             </View>
-                          </View>: null }
+                          </Animated.View>: null } */}
+                          <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                            <View style={style.view_inpersion_lager}>
+                              <View style={style.view_inpersion}>
+                              </View>
+                            </View>
+                          </Animated.View>
+                         
                         </View>
                       </View>
                     </ReactNativeZoomableView>
@@ -334,7 +414,7 @@ function DetailMap({route, navigation}){
               <View style={{width:'100%', height:'10%', flexDirection:'row', justifyContent:'flex-end'}}>
                 <TouchableOpacity style={{width:60, height:60, borderRadius:30, alignItems:'center',backgroundColor:'rgba(255, 102, 102, 0.3)', flexDirection:'column', justifyContent:'center',  margin:10, position:'relative', zIndex:100}}
                   onPress={() => {
-                    navigation.goBack();
+                    // navigation.goBack();
                   }}
                 >
                     <Icon5 name="plus-circle" color={'#CB3837'} size={50} />
