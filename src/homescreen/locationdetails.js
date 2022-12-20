@@ -31,11 +31,9 @@ function LocationDetail({route,navigation}) {
                                 <Text style={{color:'black', fontStyle:'800', fontSize: 30, }}>{getDataPS.title}</Text>
                                 <Text style={{color: "black"}}>{getDataPS.description}</Text>
                                 <StarRating ratings={getDataPS.rating} reviews={getDataPS.reviews} />
-                                
                             </View>
                             <ScrollView style={{width:"100%", height:'50%'}} horizontal={true}>
                                 {getDataPS.image.map((key, index) => (
-                                   
                                     <Image 
                                         key={key}
                                         source={getDataPS.image[index]}
@@ -72,7 +70,7 @@ function LocationDetail({route,navigation}) {
                             <View style={{margin:10}}>
                                 <View style={{margin:10}}>
                                     <Text style={{marginBottom:10, paddingBottom:5, color:'black', borderBottomColor:'black', borderBottomWidth:1}}>
-                                        Địa chỉ: 394 Hoàng Văn Thụ, Phường 4, Tân Bình, Thành phố Hồ Chí Minh, Vietnam
+                                        Địa chỉ: Quang Trung Software City, Lô 46, Tân Hưng Thuận, Quận 12, Thành phố Hồ Chí Minh, Vietnam
                                     </Text>
                                     <Text style={{marginBottom:10, paddingBottom:5, color:'black', borderBottomColor:'black', borderBottomWidth:1}}>
                                         Giờ mở cửa: 8h sáng

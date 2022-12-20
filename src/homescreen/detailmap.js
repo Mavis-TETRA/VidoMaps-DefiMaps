@@ -320,17 +320,16 @@ function DetailMap({route, navigation}){
             Animated.timing(
               locationMotionLeft, 
               {
-                // toValue:get_LocationExact.latitude*(Dimensions.get('window').width/126),
-                toValue: 85*(Dimensions.get('window').width/126),
+                toValue:get_LocationExact.latitude*(Dimensions.get('window').width/126),
+                // toValue: 47*(Dimensions.get('window').width/126),
                 duration: 400,
                 useNativeDriver: false
               }),
-  
               Animated.timing(
                 locationMotionBottom, 
                 {
-                  // toValue:get_LocationExact.longitude*(Dimensions.get('window').height/126),
-                  toValue: 106*(Dimensions.get('window').width/126),
+                  toValue:get_LocationExact.longitude*(Dimensions.get('window').height/126),
+                  // toValue: 160*(Dimensions.get('window').width/126),
                   duration: 400,
                   useNativeDriver: false
                 })
@@ -342,9 +341,6 @@ function DetailMap({route, navigation}){
       // const changeModalVisibility = (bool) => {
       //   setisModalVisible(bool)
       // }
-
-    
-
     return (
         <SafeAreaView style={style.main_project}>
         <StatusBar
@@ -379,12 +375,17 @@ function DetailMap({route, navigation}){
                     <ReactNativeZoomableView
                       maxZoom={3.5}
                       minZoom={1.0}
-                     
                       initialZoom={1.0}
                       style={{
                         width:"100%",height:"100%", position:'relative'
                       }}
                     >
+                        {/* {(listFloor[0].area == id)? <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                            <View style={style.view_inpersion_lager}>
+                              <View style={style.view_inpersion}>
+                              </View>
+                            </View>
+                          </Animated.View>: null } */}
                       <View style={{width:"100%",height:"100%", position:'absolute', top:0, left:0}}>
                         <View style={{width:"100%",height:"100%",position:'relative', }}>
                           {listFloor[0].area == id?<Image style={[{width:"193%",height:"57%",position:'absolute', top:138, left: -180 }, {transform:[{ rotate: "90deg" }]}]}
@@ -393,19 +394,17 @@ function DetailMap({route, navigation}){
                                 source={listAreaCDLTT[0].image}
                                 resizeMode="contain" />
                               }
-                          {/* {(listFloor[0].area == id)? <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
+                        
+
+                          {
+                            (get_LocationExact.latitude != 0 && get_LocationExact.longitude != 0) ? <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
                             <View style={style.view_inpersion_lager}>
                               <View style={style.view_inpersion}>
                               </View>
                             </View>
-                          </Animated.View>: null } */}
-                          <Animated.View style={{ width:80,height:80, borderRadius:50, backgroundColor:"rgba(32,90,167,0.2)",  position:'absolute',left:(locationMotionLeft),  bottom:(locationMotionBottom), alignItems:'center',  flexDirection:'row',  justifyContent:'center'}}>
-                            <View style={style.view_inpersion_lager}>
-                              <View style={style.view_inpersion}>
-                              </View>
-                            </View>
-                          </Animated.View>
-                         
+                          </Animated.View>:null
+                          }
+                          
                         </View>
                       </View>
                     </ReactNativeZoomableView>

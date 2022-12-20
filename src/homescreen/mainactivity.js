@@ -50,7 +50,6 @@ const LONG =  106.62816684009636;
 
 const Images = [
   { image: require("../../drawble/drawbleImg/logoVido.png") },
-  
 ];
 
 const markers = [
@@ -174,6 +173,20 @@ const markers = [
     reviews: 129,
   },
  
+  {
+    coordinate: {
+      latitude: 10.8522596822793, 
+      longitude: 106.62943852607353
+    },
+    id:"coffee_cof",
+    title: "Cof Coffee",
+    description: "Coffee and Chill",
+    imagelogo: require("../../drawble/drawbleImg/image_ad/cof_logo.png"),
+    imagebanner: require("../../drawble/drawbleImg/image_ad/banner_cof.jpeg"),
+    image: [require("../../drawble/drawbleImg/image_ad/cof1.png"),require("../../drawble/drawbleImg/image_ad/cof2.png")],
+    rating: 5,
+    reviews: 129,
+  },
 ];
 
 const markers_ad = [
@@ -193,7 +206,6 @@ function HomeActivity({navigation}){
       name: 'Nhà hàng',
       icon: <Ionicons name="restaurant" style={style.chipsIcon} size={18} />,
     },
-    
     {
       name: 'Khách sạn',
       icon: <Fontisto name="hotel" style={style.chipsIcon} size={15} />,
@@ -202,10 +214,8 @@ function HomeActivity({navigation}){
       name: 'Nhà riêng',
       icon: <Fontisto name="home" style={style.chipsIcon} size={15} />,
     },
-    
   ]
   const [getLawPermission, setLawPermission] = useState(false);
-   
     const requestPermission = () => {
       request(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION).then((response) => {
         // console.log(response)
@@ -219,7 +229,6 @@ function HomeActivity({navigation}){
             case RESULTS.DENIED:
               BackHandler.exitApp();
               // console.log('The permission has not been requested / is denied but requestable');
-              
               break;
             case RESULTS.GRANTED:
               // console.log('The permission is granted');
@@ -228,7 +237,6 @@ function HomeActivity({navigation}){
             case RESULTS.BLOCKED:
               BackHandler.exitApp();
               // console.log('The permission is denied and not requestable anymore');
-              
               break;
           }
         })
@@ -236,14 +244,10 @@ function HomeActivity({navigation}){
           // …
         });
     }
-
-    
-
     const runningRequest = () =>{
       if (getLawPermission == false) {
         requestPermission();
         checkPermission();
-        
       }
     }
 
@@ -317,7 +321,6 @@ function HomeActivity({navigation}){
 
       const _map = React.useRef(null);
       const _scrollView = React.useRef(null);
-    
 
       const onMarkerPress = (mapEventData) => {
         const markerID = mapEventData._targetInst.return.key;
@@ -329,7 +332,6 @@ function HomeActivity({navigation}){
     
         _scrollView.current.scrollTo({x: x, y: 0, animated: true});
       }
-
 
       const scale = useRef(new Animated.Value(1)).current;
 
@@ -396,7 +398,6 @@ function HomeActivity({navigation}){
             backgroundColor="#0D9648"
           />
             <View style={style.main_view}>
-             
               <MapView
                 style={style.map_view}
                   initialRegion={
@@ -440,12 +441,10 @@ function HomeActivity({navigation}){
                       }}
                       title={"Me"}
                       description={""}
-                      
                   >
                     <View style={{backgroundColor:'blue', width:10, height:10, borderRadius:20}}>
                     </View>
                   </Marker> */}
-           
                    {markers.map((marker, index) => {
                      return(
                       <Marker key={index} 
@@ -477,7 +476,6 @@ function HomeActivity({navigation}){
                       onPress={() => {
                         setIndexLocation(id),
                         topViewAD();
-                       
                       }}
                       >
                           <View style={style.markers_point}>
@@ -538,7 +536,6 @@ function HomeActivity({navigation}){
                           <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
                           <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
                           <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
-                     
                         </View>
                         <View style={{flex:1}}>
                           <TouchableOpacity
@@ -566,14 +563,12 @@ function HomeActivity({navigation}){
                           </TouchableOpacity>
                         </View>
                       </View>
-                      
                       <TouchableOpacity
                         onPress={() => {
                           // bottomView();
                           navigation.navigate("DetailMap", {
                             id: markers[indexLocation].id
                           });
-                         
                         }}
                       >
                         <View style={{backgroundColor:'green',marginTop:10, padding:10, borderRadius:20, alignItems:'center'}}>
@@ -601,7 +596,6 @@ function HomeActivity({navigation}){
                           <Text numberOfLines={1} style={style.cardtitle}>{markers[indexLocation].title}</Text>
                           <StarRating ratings={markers[indexLocation].rating} reviews={markers[indexLocation].reviews} />
                           <Text numberOfLines={1} style={style.cardDescription}>{markers[indexLocation].description}</Text>
-       
                         </View>
                         <View style={{flex:1}}>
                           <TouchableOpacity
@@ -635,7 +629,6 @@ function HomeActivity({navigation}){
                           // navigation.navigate("DetailMap", {
                           //   id: markers[indexLocation].id
                           // });
-                         
                         }}
                       >
                         <View style={{backgroundColor:'#CB3837',marginTop:10, padding:10, borderRadius:20, alignItems:'center', flexDirection:'row', justifyContent:'center', width:"40%"}}>
@@ -653,9 +646,7 @@ function HomeActivity({navigation}){
                           <Text style={[style.textSign, {color: '#FF6347'}]}>X</Text>
                         </TouchableOpacity>
                 </Animated.View> }
-                
                 {/* VIew AD */}
-                
             </View>
    </SafeAreaView>
     )
